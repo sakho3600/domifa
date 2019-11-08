@@ -29,6 +29,7 @@ COPY ./packages/backend/tslint.json /app/packages/backend/tslint.json
 COPY ./packages/frontend/jest.config.js /app/packages/frontend/jest.config.js
 COPY ./packages/frontend/tslint.json /app/packages/frontend/tslint.json
 
-RUN yarn build --stream
+RUN yarn workspace @domifa/backend build
+RUN yarn workspace @domifa/frontend build --prod
 
 COPY ./dump_test.gzip /app/dump_test.gzip
