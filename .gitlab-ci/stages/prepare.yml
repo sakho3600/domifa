@@ -18,10 +18,10 @@ Workspace install:
   artifacts:
     paths:
       - node_modules
-      - packages/*/node_modules
   script:
+    - rm -rf packages
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
-    - yarn --frozen-lockfile
+    - yarn
 
 Register socialgouv/domifa base image:
   <<: *prepare_stage
