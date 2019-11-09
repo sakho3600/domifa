@@ -22,8 +22,22 @@ Workspace install:
     - time tar -xpf node_modules.tar || true
   after_script:
     - time tar -cf .yarn.cache.tar .yarn
-    - time tar -cf node_modules.tar node_modules
+    - time tar -cf node_modules.tar node_modules packages/*/node_modules
 
   script:
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
     - yarn --frozen-lockfile
+
+Build backend:
+  stage: "Build"
+
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-yarn-cache"
+    paths:
+      - node_modules.tar
+    policy: pull
+  before_script:
+    - time tar -xpf node_modules.tar
+
+  script:
+    - yarn workspace @domifa/backend build
