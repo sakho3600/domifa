@@ -7,6 +7,21 @@
 
 #
 
+Workspace install:
+  <<: *prepare_stage
+  image: node:12
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-node_modules"
+    paths:
+      - $CI_PROJECT_DIR/.yarn
+  artifacts:
+    paths:
+      - node_modules
+      - packages/*/node_modules
+  script:
+    - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
+    - yarn --frozen-lockfile
+
 Register socialgouv/domifa base image:
   <<: *prepare_stage
   variables:
