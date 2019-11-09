@@ -8,7 +8,8 @@
 #
 
 Workspace install:
-  <<: *prepare_stage
+  stage: "Prepare"
+  dependencies: []
   image: node:12
   cache:
     key: "$CI_COMMIT_REF_SLUG-node_modules"
