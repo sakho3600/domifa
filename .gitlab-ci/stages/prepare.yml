@@ -27,7 +27,3 @@ Workspace install:
   script:
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
     - yarn --frozen-lockfile
-
-Test:
-  needs:
-    - Workspace install
