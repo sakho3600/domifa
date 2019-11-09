@@ -41,3 +41,31 @@ Build backend:
 
   script:
     - yarn workspace @domifa/backend build
+
+Build frontend:
+  stage: "Build"
+
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-node_modules"
+    paths:
+      - node_modules.tar
+    policy: pull
+  before_script:
+    - time tar -xpf node_modules.tar
+
+  script:
+    - yarn workspace @domifa/backend build
+
+Test Backend:
+  stage: Code Quality
+  needs:
+    - Build backend
+  script:
+    - echo "yo"
+
+Test frontend:
+  stage: Code Quality
+  needs:
+    - Build frontend
+  script:
+    - echo "yo"
