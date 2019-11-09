@@ -13,7 +13,7 @@ Backend Install:
   image: node:12
 
   cache:
-    key: "$CI_COMMIT_REF_SLUG-node_modules"
+    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-node_modules"
     paths:
       - $CI_PROJECT_DIR/.yarn
   artifacts:
@@ -25,10 +25,20 @@ Backend Install:
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
     - yarn --frozen-lockfile --focus
 
-Register socialgouv/domifa base image:
-  <<: *prepare_stage
-  variables:
-    CONTEXT: .
-    DOCKER_BUILD_ARGS: >-
-      --shm-size 1024M
-    IMAGE_NAME: $CI_REGISTRY_IMAGE
+Frontend Install:
+  stage: "Prepare"
+  dependencies: []
+  image: node:12
+
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-node_modules"
+    paths:
+      - $CI_PROJECT_DIR/.yarn
+  artifacts:
+    paths:
+      - node_modules
+
+  script:
+    - cd packages/frontend
+    - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
+    - yarn --frozen-lockfile --focus
