@@ -7,10 +7,11 @@
 
 #
 
-Workspace install:
+Backend Install:
   stage: "Prepare"
   dependencies: []
   image: node:12
+
   cache:
     key: "$CI_COMMIT_REF_SLUG-node_modules"
     paths:
@@ -18,9 +19,11 @@ Workspace install:
   artifacts:
     paths:
       - node_modules
+
   script:
+    - cd packages/backend
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
-    - yarn --frozen-lockfile --link-duplicates
+    - yarn --frozen-lockfile --focus
 
 Register socialgouv/domifa base image:
   <<: *prepare_stage
