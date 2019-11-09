@@ -17,9 +17,9 @@ Workspace install:
     paths:
       - .yarn.cache.tar
   before_script:
-    - time tar -xpf .yarn.cache.tar $CI_PROJECT_DIR/.yarn || true
+    - time tar -xpf .yarn.cache.tar .yarn || true
   after_script:
-    - time tar -cf .yarn.cache.tar $CI_PROJECT_DIR/.yarn
+    - time tar -cf .yarn.cache.tar .yarn
 
   script:
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
