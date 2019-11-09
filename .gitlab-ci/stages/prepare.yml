@@ -19,9 +19,8 @@ Workspace install:
     paths:
       - node_modules
   script:
-    - rm -rf packages/backend
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
-    - yarn
+    - yarn --frozen-lockfile --link-duplicates
 
 Register socialgouv/domifa base image:
   <<: *prepare_stage
