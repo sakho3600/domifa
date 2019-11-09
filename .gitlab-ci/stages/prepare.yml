@@ -13,7 +13,7 @@ Workspace install:
   image: node:12
 
   cache:
-    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-node_modules"
+    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-yarn-cache"
     paths:
       - .yarn.cache.tar
   before_script:
