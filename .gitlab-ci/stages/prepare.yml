@@ -7,7 +7,7 @@
 
 #
 
-Backend Install:
+Workspace install:
   stage: "Prepare"
   dependencies: []
   image: node:12
@@ -15,30 +15,13 @@ Backend Install:
   cache:
     key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-node_modules"
     paths:
-      - $CI_PROJECT_DIR/.yarn
-  artifacts:
-    paths:
-      - node_modules
+      - .yarn.cache.tar
+  before_script:
+    - time tar -xpf .yarn.cache.tar $CI_PROJECT_DIR/.yarn || true
+  after_script:
+    - time tar -cvf .yarn.cache.tar $CI_PROJECT_DIR/.yarn
 
   script:
-    - cd packages/backend
     - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
-    - yarn --frozen-lockfile --focus
+    - yarn --frozen-lockfile
 
-Frontend Install:
-  stage: "Prepare"
-  dependencies: []
-  image: node:12
-
-  cache:
-    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-node_modules"
-    paths:
-      - $CI_PROJECT_DIR/.yarn
-  artifacts:
-    paths:
-      - node_modules
-
-  script:
-    - cd packages/frontend
-    - yarn config set cache-folder $CI_PROJECT_DIR/.yarn
-    - yarn --frozen-lockfile --focus
