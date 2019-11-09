@@ -13,7 +13,7 @@ Workspace install:
   image: node:12
 
   cache:
-    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-yarn-cache"
+    key: "$CI_COMMIT_REF_SLUG-node_modules"
     paths:
       - .yarn.cache.tar
       - node_modules.tar
@@ -32,7 +32,7 @@ Build backend:
   stage: "Build"
 
   cache:
-    key: "$CI_COMMIT_REF_SLUG-$CI_BUILD_REF_NAME-yarn-cache"
+    key: "$CI_COMMIT_REF_SLUG-node_modules"
     paths:
       - node_modules.tar
     policy: pull
