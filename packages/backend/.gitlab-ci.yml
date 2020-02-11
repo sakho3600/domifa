@@ -1,0 +1,13 @@
+#
+
+Install backend:
+  extends: .base_yarn_workspace_install
+  variables:
+    CONTEXT: backend
+  before_script:
+    - find packages -maxdepth 1 -type d -not -name backend | tail -n +2 | xargs rm -rf
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - node_modules
+      - packages/backend/node_modules

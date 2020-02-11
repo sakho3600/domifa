@@ -1,6 +1,7 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import {
   CUSTOM_ELEMENTS_SCHEMA,
+  ErrorHandler,
   NgModule,
   NO_ERRORS_SCHEMA
 } from "@angular/core";
@@ -22,6 +23,7 @@ import { ToastrModule } from "ngx-toastr";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { JwtInterceptor } from "./interceptors/jwt.interceptor";
+
 import { ServerErrorInterceptor } from "./interceptors/server-error.interceptor";
 import { GeneralModule } from "./modules/general/general.module";
 import { StatsModule } from "./modules/stats/stats.module";
