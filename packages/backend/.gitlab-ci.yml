@@ -80,3 +80,24 @@ Register backend image:
   variables:
     CONTEXT: packages/backend
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
+
+.deploy_backend_stage:
+  extends:
+    - .base_deploy_nodejs_chart_stage
+    - .deploy_stage
+  variables:
+    # PORT: ${backend_PORT}
+    CONTEXT: backend
+    K8S_NAMESPACE: $KUBE_NAMESPACE
+    VALUES_FILE: ./packages/backend/k8s.values.yml
+
+Deploy backend (dev):
+  variables:
+    HOST: api-${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}-dev
+    url: https://api-${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+    on_stop: Stop review
+  extends:
+    - .deploy_backend_stage
+    - .dev_stage
