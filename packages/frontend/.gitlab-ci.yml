@@ -52,3 +52,26 @@ Register frontend image:
   variables:
     CONTEXT: packages/frontend
     IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend
+
+
+.deploy_frontend_stage:
+  extends:
+    - .base_deploy_nodejs_chart_stage
+    - .deploy_stage
+  variables:
+    # PORT: ${FRONTEND_PORT}
+    CONTEXT: frontend
+    VALUES_FILE: ./packages/frontend/k8s.values.yml
+  before_script:
+    - HOST=${FRONTEND_HOST}
+
+Deploy frontend (dev):
+  variables:
+    HOST: ${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}-dev
+    url: https://${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+    on_stop: Stop review
+  extends:
+    - .deploy_frontend_stage
+    - .dev_stage

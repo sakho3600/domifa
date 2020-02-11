@@ -12,6 +12,9 @@ include:
   - project: SocialGouv/gitlab-ci-yml
     file: /base_create_namespace_stage.yml
     ref: v7.1.0
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_deploy_nodejs_chart_stage.yml
+    ref: v5.0.0
   - /packages/backend/.gitlab-ci.yml
   - /packages/frontend/.gitlab-ci.yml
   - https://raw.githubusercontent.com/SocialGouv/code-du-travail-numerique/douglasduteil/refacto-gitlab-separate-package-installation/.gitlab-ci/extends.yml
@@ -33,7 +36,7 @@ stages:
   - "Registration"
   - "Integration test"
   - "Deploy"
-  #- "Notify Finished Deployment"
+  - "Notify Finished Deployment"
 #
 
 .base_stage:
@@ -61,6 +64,22 @@ stages:
   stage: "Registration"
   dependencies: []
 
+.deploy_stage:
+  extends: .base_stage
+  stage: "Deploy"
+  variables:
+    IMAGE_TAG: ${CI_COMMIT_SHA}
+    REGISTRY: ${CI_REGISTRY_IMAGE}
+  dependencies: []
+
+#
+
+.dev_stage:
+  extends: .base_stage
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}-dev
+    url: https://${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_ID}.${KUBE_INGRESS_BASE_DOMAIN}
+
 #
 #
 #
@@ -70,3 +89,23 @@ Create namespace:
     - .base_create_namespace_stage
     - .base_stage
   stage: "Registration"
+
+
+Stop review:
+  extends: .base_docker_kubectl_image_stage
+  stage: Clean Up
+  except:
+    refs:
+      - tags
+      - master
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}-dev
+    action: stop
+  when: manual
+  allow_failure: true
+  dependencies: []
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "kubectl delete namespace ${KUBE_NAMESPACE}"
+    - kubectl delete namespace "${KUBE_NAMESPACE}"
