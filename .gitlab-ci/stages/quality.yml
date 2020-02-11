@@ -36,7 +36,7 @@ Test @domifa/backend:
   stage: "Integration test"
   <<: *master_based_stage
   services:
-    - name: mongo:4.0.3
+    - name: mongo:4.2.3
   script:
     - |
       cat <<EOF > ./packages/backend/.env
