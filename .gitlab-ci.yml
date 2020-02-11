@@ -46,3 +46,8 @@ stages:
   extends: .base_stage
   stage: "Code Quality"
   dependencies: []
+
+.register_stage:
+  extends: .base_stage
+  stage: "Registration"
+  dependencies: []
