@@ -31,11 +31,11 @@ include:
 #
 
 stages:
+  - "Prepare"
+  - "Code Quality"
   - "Registration"
   - "Deploy"
   - "Notify Finished Deployment"
-  - "Prepare"
-  - "Code Quality"
   - "Integration test"
   - Clean Up
 
