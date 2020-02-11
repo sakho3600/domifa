@@ -12,7 +12,7 @@ Install backend:
       - node_modules
       - packages/backend/node_modules
 
-Lint @domifa/backend:
+Lint backend:
   extends: .quality_stage
   image: node:12-alpine
   dependencies:
@@ -23,7 +23,7 @@ Lint @domifa/backend:
   script:
     - yarn workspace @domifa/backend lint
 
-Build @domifa/backend:
+Build backend:
   extends: .quality_stage
   image: node:12-alpine
   dependencies:
@@ -38,7 +38,7 @@ Build @domifa/backend:
     paths:
       - packages/backend/dist
 
-Test @domifa/backend:
+Test backend:
   extends: .quality_stage
   stage: "Integration test"
   image: node:12

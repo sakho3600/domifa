@@ -12,7 +12,7 @@ Install frontend:
       - node_modules
       - packages/frontend/node_modules
 
-Lint @domifa/frontend:
+Lint frontend:
   extends: .quality_stage
   allow_failure: true
   image: node:12-alpine
@@ -23,7 +23,7 @@ Lint @domifa/frontend:
   script:
     - yarn workspace @domifa/frontend lint
 
-Build @domifa/frontend:
+Build frontend:
   extends: .quality_stage
   allow_failure: true
   image: node:12-alpine
