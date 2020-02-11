@@ -3,6 +3,9 @@ include:
   - project: SocialGouv/gitlab-ci-yml
     file: /base_register_stage.yml
     ref: v7.1.0
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_create_namespace_stage.yml
+    ref: v7.1.0
   - /packages/backend/.gitlab-ci.yml
   - /packages/frontend/.gitlab-ci.yml
   - https://raw.githubusercontent.com/SocialGouv/code-du-travail-numerique/douglasduteil/refacto-gitlab-separate-package-installation/.gitlab-ci/extends.yml
@@ -51,3 +54,13 @@ stages:
   extends: .base_stage
   stage: "Registration"
   dependencies: []
+
+#
+#
+#
+
+Create namespace:
+  extends:
+    - .base_create_namespace_stage
+    - .base_stage
+  stage: "Registration"
