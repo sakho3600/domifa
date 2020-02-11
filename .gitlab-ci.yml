@@ -4,9 +4,6 @@ include:
     file: /base_register_stage.yml
     ref: v7.1.0
   - project: SocialGouv/gitlab-ci-yml
-    file: /base_register_stage.yml
-    ref: v7.1.0
-  - project: SocialGouv/gitlab-ci-yml
     file: /base_docker_helm_image_stage.yml
     ref: v7.1.0
   - project: SocialGouv/gitlab-ci-yml
