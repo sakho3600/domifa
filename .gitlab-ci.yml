@@ -40,3 +40,8 @@ stages:
   extends: .base_stage
   stage: "Prepare"
   dependencies: []
+
+.quality_stage:
+  extends: .base_stage
+  stage: "Code Quality"
+  dependencies: []

@@ -11,3 +11,13 @@ Install backend:
     paths:
       - node_modules
       - packages/backend/node_modules
+
+Lint @domifa/backend:
+  extends: .quality_stage
+  dependencies:
+    - Install backend
+  needs:
+    - Install backend
+  allow_failure: true
+  script:
+    - yarn workspace @domifa/backend lint
