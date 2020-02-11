@@ -1,7 +1,8 @@
 ---
-#
-
 include:
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_register_stage.yml
+    ref: v7.1.0
   - /packages/backend/.gitlab-ci.yml
   - /packages/frontend/.gitlab-ci.yml
   - https://raw.githubusercontent.com/SocialGouv/code-du-travail-numerique/douglasduteil/refacto-gitlab-separate-package-installation/.gitlab-ci/extends.yml

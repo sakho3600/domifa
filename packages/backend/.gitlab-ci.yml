@@ -23,6 +23,21 @@ Lint @domifa/backend:
   script:
     - yarn workspace @domifa/backend lint
 
+Build @domifa/backend:
+  extends: .quality_stage
+  image: node:12-alpine
+  dependencies:
+    - Install backend
+  needs:
+    - Install backend
+  allow_failure: true
+  script:
+    - yarn workspace @domifa/backend build
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - packages/backend/dist
+
 Test @domifa/backend:
   extends: .quality_stage
   stage: "Integration test"
@@ -51,3 +66,18 @@ Test @domifa/backend:
     - yarn workspace @domifa/backend start:prod &
     - yarn workspace @domifa/frontend test --detectOpenHandles --forceExit
     - killall node
+
+Register backend image:
+  extends:
+    - .base_register_stage
+    - .register_stage
+  dependencies:
+    - Build backend
+  needs:
+    - Install backend
+    - Build backend
+  before_script:
+    - cp yarn.lock packages/backend/yarn.lock
+  variables:
+    CONTEXT: packages/backend
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend

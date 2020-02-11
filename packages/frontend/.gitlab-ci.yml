@@ -22,3 +22,33 @@ Lint @domifa/frontend:
     - Install frontend
   script:
     - yarn workspace @domifa/frontend lint
+
+Build @domifa/frontend:
+  extends: .quality_stage
+  allow_failure: true
+  image: node:12-alpine
+  dependencies:
+    - Install frontend
+  needs:
+    - Install frontend
+  script:
+    - yarn workspace @domifa/frontend build
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - packages/frontend/dist/domifa
+
+Register frontend image:
+  extends:
+    - .base_register_stage
+    - .register_stage
+  dependencies:
+    - Build frontend
+  needs:
+    - Install frontend
+    - Build frontend
+  before_script:
+    - cp yarn.lock packages/frontend/yarn.lock
+  variables:
+    CONTEXT: packages/frontend
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend
