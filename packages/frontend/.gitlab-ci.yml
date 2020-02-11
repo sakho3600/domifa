@@ -3,7 +3,6 @@
 Install frontend:
   extends: .base_yarn_workspace_install
   variables:
-    NO_CACHE: "true"
     CONTEXT: frontend
   before_script:
     - find packages -maxdepth 1 -type d -not -name frontend | tail -n +2 | xargs rm -rf
