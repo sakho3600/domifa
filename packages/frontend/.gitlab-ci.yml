@@ -61,6 +61,7 @@ Register frontend image:
   variables:
     # PORT: ${FRONTEND_PORT}
     CONTEXT: frontend
+    K8S_NAMESPACE: $KUBE_NAMESPACE
     VALUES_FILE: ./packages/frontend/k8s.values.yml
   before_script:
     - HOST=${FRONTEND_HOST}
