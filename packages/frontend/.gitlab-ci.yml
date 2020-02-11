@@ -15,6 +15,7 @@ Install frontend:
 Lint @domifa/frontend:
   extends: .quality_stage
   allow_failure: true
+  image: node:12-alpine
   dependencies:
     - Install frontend
   needs:
