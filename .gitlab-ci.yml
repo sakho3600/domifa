@@ -31,12 +31,12 @@ include:
 #
 
 stages:
-  - "Prepare"
-  - "Code Quality"
   - "Registration"
-  - "Integration test"
   - "Deploy"
   - "Notify Finished Deployment"
+  - "Prepare"
+  - "Code Quality"
+  - "Integration test"
   - Clean Up
 
 #
@@ -70,7 +70,7 @@ stages:
   extends: .base_stage
   stage: "Deploy"
   variables:
-    IMAGE_TAG: ${CI_COMMIT_SHA}
+    IMAGE_TAG: "8a78453770eaf45cdeab30e88a18e7621d6e8e72" #${CI_COMMIT_SHA}
     REGISTRY: ${CI_REGISTRY_IMAGE}
   dependencies: []
 
