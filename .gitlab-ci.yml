@@ -37,6 +37,8 @@ stages:
   - "Integration test"
   - "Deploy"
   - "Notify Finished Deployment"
+  - Clean Up
+
 #
 
 .base_stage:
