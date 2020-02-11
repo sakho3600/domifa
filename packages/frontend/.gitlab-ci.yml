@@ -53,7 +53,6 @@ Register frontend image:
     CONTEXT: packages/frontend
     IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend
 
-
 .deploy_frontend_stage:
   extends:
     - .base_deploy_nodejs_chart_stage
@@ -63,8 +62,6 @@ Register frontend image:
     CONTEXT: frontend
     K8S_NAMESPACE: $KUBE_NAMESPACE
     VALUES_FILE: ./packages/frontend/k8s.values.yml
-  before_script:
-    - HOST=${FRONTEND_HOST}
 
 Deploy frontend (dev):
   variables:
