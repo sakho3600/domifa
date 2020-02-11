@@ -32,6 +32,7 @@ Build backend:
     - Install backend
   allow_failure: true
   script:
+    - yarn
     - yarn workspace @domifa/backend build
   artifacts:
     expire_in: 1 day
