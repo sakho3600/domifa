@@ -1,0 +1,76 @@
+#
+
+Install frontend:
+  extends: .base_yarn_workspace_install
+  variables:
+    NO_CACHE: "true"
+    CONTEXT: frontend
+  before_script:
+    - find packages -maxdepth 1 -type d -not -name frontend | tail -n +2 | xargs rm -rf
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - node_modules
+      - packages/frontend/node_modules
+
+Lint frontend:
+  extends: .quality_stage
+  allow_failure: true
+  image: node:12-alpine
+  dependencies:
+    - Install frontend
+  needs:
+    - Install frontend
+  script:
+    - yarn workspace @domifa/frontend lint
+
+Build frontend:
+  extends: .quality_stage
+  image: node:12-alpine
+  dependencies:
+    - Install frontend
+  needs:
+    - Install frontend
+  script:
+    - yarn workspace @domifa/frontend build
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - packages/frontend/dist/domifa
+
+Register frontend image:
+  extends:
+    - .base_register_stage
+    - .register_stage
+  dependencies:
+    - Build frontend
+  needs:
+    - Install frontend
+    - Build frontend
+  before_script:
+    - cp yarn.lock packages/frontend/yarn.lock
+  variables:
+    CONTEXT: packages/frontend
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend
+
+.deploy_frontend_stage:
+  extends:
+    - .base_deploy_nodejs_chart_stage
+    - .deploy_stage
+  variables:
+    # PORT: ${FRONTEND_PORT}
+    CONTEXT: frontend
+    K8S_NAMESPACE: $KUBE_NAMESPACE
+    VALUES_FILE: ./packages/frontend/k8s.values.yml
+
+Deploy frontend (dev):
+  variables:
+    HOST: ${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+    API_HOST: api-${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}-dev
+    url: https://${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_NAME}.${KUBE_INGRESS_BASE_DOMAIN}
+    on_stop: Stop review
+  extends:
+    - .deploy_frontend_stage
+    - .dev_stage

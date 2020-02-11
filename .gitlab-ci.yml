@@ -1,13 +1,30 @@
 ---
-#
-
 include:
-  - /.gitlab-ci/variables.yml
-  - /.gitlab-ci/extends.yml
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_register_stage.yml
+    ref: v7.1.0
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_docker_helm_image_stage.yml
+    ref: v7.1.0
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_docker_kubectl_image_stage.yml
+    ref: v7.1.0
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_create_namespace_stage.yml
+    ref: v7.1.0
+  - project: SocialGouv/gitlab-ci-yml
+    file: /base_deploy_nodejs_chart_stage.yml
+    ref: v7.1.0
+  - /packages/backend/.gitlab-ci.yml
+  - /packages/frontend/.gitlab-ci.yml
+  - https://raw.githubusercontent.com/SocialGouv/code-du-travail-numerique/douglasduteil/refacto-gitlab-separate-package-installation/.gitlab-ci/extends.yml
+
+  #- /.gitlab-ci/variables.yml
+  #- /.gitlab-ci/extends.yml
   #
-  - /.gitlab-ci/stages/prepare.yml
-  - /.gitlab-ci/stages/quality.yml
-  - /.gitlab-ci/stages/register.yml
+  #- /.gitlab-ci/stages/prepare.yml
+  #- /.gitlab-ci/stages/quality.yml
+  #- /.gitlab-ci/stages/register.yml
   #- /.gitlab-ci/stages/notify.yml
   # /.gitlab-ci/stages/deploy.yml
 
@@ -17,7 +34,80 @@ stages:
   - "Prepare"
   - "Code Quality"
   - "Registration"
-  - "Integration test"
   - "Deploy"
-  #- "Notify Finished Deployment"
+  - "Notify Finished Deployment"
+  - "Integration test"
+  - Clean Up
+
 #
+
+.base_stage:
+  except:
+    variables:
+      # Don't run when tagging a commit
+      - $RELEASE
+      # Don't run when deploying in production an existing image
+      - $PRODUCTION
+      # Don't run when running e2e tests
+      - $E2E_TEST
+
+.prepare_stage:
+  extends: .base_stage
+  stage: "Prepare"
+  dependencies: []
+
+.quality_stage:
+  extends: .base_stage
+  stage: "Code Quality"
+  dependencies: []
+
+.register_stage:
+  extends: .base_stage
+  stage: "Registration"
+  dependencies: []
+
+.deploy_stage:
+  extends: .base_stage
+  stage: "Deploy"
+  variables:
+    IMAGE_TAG: "8a78453770eaf45cdeab30e88a18e7621d6e8e72" #${CI_COMMIT_SHA}
+    REGISTRY: ${CI_REGISTRY_IMAGE}
+  dependencies: []
+
+#
+
+.dev_stage:
+  extends: .base_stage
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}-dev
+    url: https://${CI_ENVIRONMENT_SLUG}-${CI_PROJECT_ID}.${KUBE_INGRESS_BASE_DOMAIN}
+
+#
+#
+#
+
+Create namespace:
+  extends:
+    - .base_create_namespace_stage
+    - .base_stage
+  stage: "Registration"
+
+
+Stop review:
+  extends: .base_docker_kubectl_image_stage
+  stage: Clean Up
+  except:
+    refs:
+      - tags
+      - master
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}-dev
+    action: stop
+  when: manual
+  allow_failure: true
+  dependencies: []
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "kubectl delete namespace ${KUBE_NAMESPACE}"
+    - kubectl delete namespace "${KUBE_NAMESPACE}"
