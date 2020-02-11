@@ -15,7 +15,7 @@ Install frontend:
 Lint @domifa/frontend:
   extends: .quality_stage
   allow_failure: true
-    dependencies:
+  dependencies:
     - Install frontend
   needs:
     - Install frontend
