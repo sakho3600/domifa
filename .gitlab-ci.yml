@@ -14,7 +14,7 @@ include:
     ref: v7.1.0
   - project: SocialGouv/gitlab-ci-yml
     file: /base_deploy_nodejs_chart_stage.yml
-    ref: v5.0.0
+    ref: v7.1.0
   - /packages/backend/.gitlab-ci.yml
   - /packages/frontend/.gitlab-ci.yml
   - https://raw.githubusercontent.com/SocialGouv/code-du-travail-numerique/douglasduteil/refacto-gitlab-separate-package-installation/.gitlab-ci/extends.yml
